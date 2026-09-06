@@ -33,6 +33,11 @@ function PricesSection({ myVotes }) {
     return <p className="text-sm text-ink-muted">Loading…</p>
   }
 
+  // the backend drops any coin it has neither a fresh nor a cached price for
+  if (prices.length === 0) {
+    return <SectionError />
+  }
+
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       {prices.map((row) => (

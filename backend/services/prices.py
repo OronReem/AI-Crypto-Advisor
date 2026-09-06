@@ -47,18 +47,32 @@ def get_prices(coins):
     # only the coins we don't already have a fresh price for
     if stale:
         ids = [COINGECKO_IDS[coin] for coin in stale]
-        response = requests.get(
-            "https://api.coingecko.com/api/v3/simple/price",
-            params={"ids": ",".join(ids), "vs_currencies": "usd"},
-            # without this, a hanging CoinGecko would hang our endpoint forever
-            timeout=10,
-        )
-        data = response.json()
+        try:
+            response = requests.get(
+                "https://api.coingecko.com/api/v3/simple/price",
+                params={"ids": ",".join(ids), "vs_currencies": "usd"},
+                # without this, a hanging CoinGecko would hang our endpoint forever
+                timeout=10,
+            )
+            data = response.json()
+        except Exception:
+            data = {}
 
         for coin in stale:
-            price = data[COINGECKO_IDS[coin]]["usd"]
-            prices[coin] = price
-            _cache[coin] = (price, now)
+            # CoinGecko rate-limits shared cloud IPs and answers with an error
+            # object instead of prices, so the coin's key can simply be absent
+            entry = data.get(COINGECKO_IDS[coin])
+            if entry and "usd" in entry:
+                prices[coin] = entry["usd"]
+                _cache[coin] = (entry["usd"], now)
+            elif coin in _cache:
+                # an old price beats an error card — the cache holds the last
+                # value we successfully fetched, however long ago that was
+                prices[coin] = _cache[coin][0]
 
-    # rebuilt from `coins` so the order always matches the user's own list
-    return [{"coin": coin, "price": prices[coin]} for coin in coins]
+    # rebuilt from `coins` so the order always matches the user's own list.
+    # a coin with neither a fresh price nor a cached one is dropped rather
+    # than crashing the whole section
+    return [
+        {"coin": coin, "price": prices[coin]} for coin in coins if coin in prices
+    ]
