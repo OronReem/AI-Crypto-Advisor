@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { authFetch } from '../lib/api.js'
+import { API_URL, authFetch } from '../lib/api.js'
 import { isOnboarded } from '../lib/preferences.js'
 
 function Login() {
@@ -17,7 +17,7 @@ function Login() {
     setMessage('')
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

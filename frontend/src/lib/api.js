@@ -1,4 +1,7 @@
-const API_URL = 'http://127.0.0.1:8000'
+// Vite swaps VITE_* in at build time; Vercel supplies the Render URL, the
+// fallback keeps `npm run dev` working. Exported because signup and login
+// call the backend without a token, so they can't use authFetch.
+export const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 export async function authFetch(path, options = {}) {
   const token = localStorage.getItem('token')
