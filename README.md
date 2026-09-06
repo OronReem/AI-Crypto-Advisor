@@ -40,13 +40,15 @@ Someone who picks "meme" and "prices" sees those two sections first.
       |  JWT in localStorage, sent as a Bearer header on every call
       v
    Vercel ---- React 19, plain JavaScript, Vite, Tailwind, React Router
+      |         vercel.json rewrites every path to index.html, so the
+      |         router resolves /dashboard on a refresh instead of a 404
       |
       |  direct cross-origin calls; the Render domain is allow-listed by CORS
       v
    Render ---- FastAPI, Uvicorn, SQLAlchemy ------> Render PostgreSQL
       |                                             users, votes, insights
       |
-      +--> CoinGecko      prices, cached 60s per coin, shared across users
+      +--> CoinGecko      prices, free Demo key, cached 60s per coin
       +--> RSS feeds      CoinDesk, Cointelegraph, Decrypt; static fallback
       +--> OpenRouter     the daily insight, one per user per day, cached in the DB
       |
@@ -91,7 +93,12 @@ It needs a `backend/.env` file, which is not committed:
 DATABASE_URL=postgresql://user:password@host/dbname
 JWT_SECRET=any long random string
 OPENROUTER_KEY=sk-or-v1-...
+COINGECKO_KEY=CG-...        # optional locally, needed once deployed
 ```
+
+`COINGECKO_KEY` is a free Demo key. CoinGecko rate-limits by IP address, and a
+cloud host's address is shared with many other callers — so anonymous requests
+that work from a laptop get refused from a server.
 
 Then the frontend:
 
@@ -116,11 +123,13 @@ backend/
   database.py    the database connection
   services/      one file per outside data source
 
-frontend/src/
-  pages/         Login, Signup, Onboarding, Dashboard
-  sections/      the four dashboard cards
-  components/    VoteButtons, CoinIcon, ProtectedRoute, SectionError
-  lib/           the fetch wrapper, and the preference rules
+frontend/
+  vercel.json    serves index.html for every route, so refreshing works
+  src/
+    pages/       Login, Signup, Onboarding, Dashboard
+    sections/    the four dashboard cards
+    components/  VoteButtons, CoinIcon, ProtectedRoute, SectionError
+    lib/         the fetch wrapper, and the preference rules
 ```
 
 ---

@@ -55,8 +55,8 @@ exception: the meme *image* is loaded straight from memegen.link by the
 **The rules this enforces:**
 
 - The browser talks to exactly one server of ours, and one image host.
-- No secret ever reaches the browser. `DATABASE_URL`, `JWT_SECRET` and
-  `OPENROUTER_KEY` exist only on the backend.
+- No secret ever reaches the browser. `DATABASE_URL`, `JWT_SECRET`,
+  `OPENROUTER_KEY` and `COINGECKO_KEY` exist only on the backend.
 - Every arrow out of the backend can fail without taking the page with it.
 - Nothing talks *back* to us. There are no webhooks, no callbacks — every
   arrow starts because a user opened a page.
@@ -194,7 +194,7 @@ nothing else from the project, which is what keeps this graph free of cycles.
 `prices.py`, `news.py` and `memes.py` only reach outward:
 
 ```
-   prices.py   ---> CoinGecko
+   prices.py   ---> CoinGecko  (with a free Demo API key)
    news.py     ---> CoinDesk / Cointelegraph / Decrypt RSS
    memes.py    ---> nothing (a static list in the file)
    insight.py  ---> OpenRouter  +  Postgres (its daily cache)
@@ -389,9 +389,9 @@ in the UI.
 
 ```
   prices    60 seconds, in memory, keyed per coin
-            -> CoinGecko's free tier is ~5-15 calls/min and every page
-               load was calling it; losing the cache on restart costs
-               one extra call
+            -> every page load was calling CoinGecko; losing the cache
+               on a restart costs one extra call. Doubles as the stale
+               fallback when CoinGecko refuses.
 
   insight   one day, in Postgres, keyed per user
             -> OpenRouter's free tier is 50 requests/day, and Render's
@@ -404,9 +404,22 @@ in the UI.
 
 **Every external source has a failure path, and each one was tested by
 breaking it.** News falls back to a hand-picked list; the AI insight falls back
-to a fixed message; prices and memes report a section-level error. The
-fallbacks were verified by deliberately breaking the real sources, not by
-reading the code.
+to a fixed message; prices fall back to the last cached value, however old,
+and drop a coin entirely rather than failing the request. The fallbacks were
+verified by deliberately breaking the real sources, not by reading the code.
+
+**CoinGecko is called with a free Demo API key.** It rate-limits by IP, and a
+cloud host's outbound address is shared with many other callers — so anonymous
+requests that work from a laptop are refused from Render. This was found in
+production: the deployed Prices section returned a `KeyError` because CoinGecko
+answered with an error object instead of prices. The key gives the app its own
+quota; the stale-cache fallback covers the case where even that is refused.
+
+**The dashboard renders its four cards before `GET /me` returns.** The section
+order comes from `/me`, so waiting for it left the page blank — and with no
+cards, none of their loading states could show either. On a Render cold start
+that is roughly 50 seconds of apparently-broken page. The order now starts at
+the default and is corrected when `/me` arrives.
 
 **Section order is computed in the browser.** It's presentation logic over
 `content_types`, which `GET /me` already returns. Putting it on the server
