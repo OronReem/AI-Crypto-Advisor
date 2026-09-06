@@ -16,12 +16,12 @@ recommendation work.
 The dashboard — sections ordered by the user's own answers, every item
 votable:
 
-![The dashboard](docs/screenshots/dashboard.png)
+<img src="docs/screenshots/dashboard.png" alt="The dashboard" width="480" />
 
 The quiz, revisited as an editable preferences page. Coin choices are capped
 at five, and the content types set the section order:
 
-![The preferences quiz](docs/screenshots/onboarding.png)
+<img src="docs/screenshots/onboarding.png" alt="The preferences quiz" width="480" />
 
 ---
 
