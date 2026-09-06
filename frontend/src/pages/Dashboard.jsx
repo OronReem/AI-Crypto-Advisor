@@ -25,7 +25,10 @@ const TODAY = new Date().toLocaleDateString('en-GB', {
 
 function Dashboard() {
   const [user, setUser] = useState(null)
-  const [order, setOrder] = useState([])
+  // starts as the default order rather than empty, so the four cards render
+  // immediately with their own loading states — otherwise a slow /me leaves
+  // the page blank, which is exactly what a Render cold start causes
+  const [order, setOrder] = useState(orderSections(null))
 
   // {section: {item: direction}} — fetched once here and handed to each
   // section, rather than four components each asking for the same thing
