@@ -1,3 +1,4 @@
+import os  # reads the optional CoinGecko key from the environment
 import time  # measures how old a cached price is
 
 import requests  # makes HTTP requests to other servers, like the browser's fetch()
@@ -47,10 +48,18 @@ def get_prices(coins):
     # only the coins we don't already have a fresh price for
     if stale:
         ids = [COINGECKO_IDS[coin] for coin in stale]
+        # CoinGecko throttles by IP, and a cloud host's IP is shared with many
+        # other callers. A free Demo key gives us our own quota instead. Sent
+        # only if it exists, so local development works without one.
+        headers = {}
+        if os.environ.get("COINGECKO_KEY"):
+            headers["x-cg-demo-api-key"] = os.environ["COINGECKO_KEY"]
+
         try:
             response = requests.get(
                 "https://api.coingecko.com/api/v3/simple/price",
                 params={"ids": ",".join(ids), "vs_currencies": "usd"},
+                headers=headers,
                 # without this, a hanging CoinGecko would hang our endpoint forever
                 timeout=10,
             )
