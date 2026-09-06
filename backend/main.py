@@ -23,10 +23,14 @@ from services.insight import get_daily_insight
 
 app = FastAPI()
 
-# lets the frontend (localhost:5173) call this backend from the browser
+# browsers block a page on one origin from calling a server on another unless
+# the server says otherwise — these are the two origins allowed to call it
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",  # Vite's dev server
+        "https://ai-crypto-advisor-oronr.vercel.app",  # the deployed site
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
