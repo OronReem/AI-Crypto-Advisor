@@ -177,3 +177,5 @@ Named on purpose, so nothing reads as an oversight:
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how it's built and why
 - [`docs/AI_COLLABORATION.md`](docs/AI_COLLABORATION.md) — how AI tools were
   used while building it
+- [`docs/TRAINING.md`](docs/TRAINING.md) — how the stored votes could be used
+  to improve recommendations
