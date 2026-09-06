@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { authFetch } from '../lib/api.js'
 import VoteButtons from '../components/VoteButtons.jsx'
 import SectionError from '../components/SectionError.jsx'
+import SectionLoading from '../components/SectionLoading.jsx'
 
 function InsightSection({ myVotes }) {
   const [insight, setInsight] = useState(null)
@@ -27,7 +28,7 @@ function InsightSection({ myVotes }) {
   }
 
   if (insight === null) {
-    return <p className="text-sm text-ink-muted">Loading…</p>
+    return <SectionLoading />
   }
 
   return (

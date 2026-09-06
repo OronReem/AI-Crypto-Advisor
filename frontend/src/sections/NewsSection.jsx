@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { authFetch } from '../lib/api.js'
 import VoteButtons from '../components/VoteButtons.jsx'
 import SectionError from '../components/SectionError.jsx'
+import SectionLoading from '../components/SectionLoading.jsx'
 
 // "4 Sep 2026" — the fallback articles carry no date, so undefined in, null out
 function formatDate(iso) {
@@ -37,7 +38,7 @@ function NewsSection({ myVotes }) {
   }
 
   if (articles === null) {
-    return <p className="text-sm text-ink-muted">Loading…</p>
+    return <SectionLoading />
   }
 
   return (

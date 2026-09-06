@@ -3,6 +3,7 @@ import { authFetch } from '../lib/api.js'
 import VoteButtons from '../components/VoteButtons.jsx'
 import CoinIcon from '../components/CoinIcon.jsx'
 import SectionError from '../components/SectionError.jsx'
+import SectionLoading from '../components/SectionLoading.jsx'
 
 function PricesSection({ myVotes }) {
   const [prices, setPrices] = useState(null)
@@ -30,7 +31,7 @@ function PricesSection({ myVotes }) {
   }
 
   if (prices === null) {
-    return <p className="text-sm text-ink-muted">Loading…</p>
+    return <SectionLoading />
   }
 
   // the backend drops any coin it has neither a fresh nor a cached price for
