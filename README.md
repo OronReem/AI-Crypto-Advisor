@@ -6,8 +6,11 @@ news ordered around the coins you follow, an AI-written insight of the day,
 and a meme. Every item can be voted on, and the votes are stored for future
 recommendation work.
 
-**Live app:** _(added after deployment)_
-**Demo login:** _(added after deployment)_
+**Live app:** https://ai-crypto-advisor-oronr.vercel.app
+
+Sign up with any email — nothing is verified, and the quiz takes about ten
+seconds. The backend is on Render's free tier, so the first request after a
+quiet period takes up to a minute while the instance wakes.
 
 ---
 
