@@ -1,0 +1,10 @@
+CLAUDE.local.md
+docs/questions.md
+docs/roadmap.md
+docs/assignment.md
+docs/project_instructions.md
+
+.env
+__pycache__/
+venv/
+node_modules/
