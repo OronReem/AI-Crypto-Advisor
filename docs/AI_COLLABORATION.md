@@ -2,9 +2,13 @@
 
 ## The tools
 
-**Claude and Gemini in the browser** for working out what to build and for
-checking one answer against the other. **Claude Code in the IDE** for writing
-the code against the real repo.
+**Claude and Gemini, in the browser** — used for depth. Understanding each
+technology the assignment implied, mapping the options at every decision point,
+and putting the same question to both models to see whether the answers held up.
+
+**Claude Code, in the IDE** — the planner and executor. It held the
+specification, the roadmap and the decision log, and wrote the code against the
+real repository under the rules below.
 
 ## Understanding first
 
@@ -38,15 +42,23 @@ database — not in a code review.
 
 ## Where I corrected it
 
-Two worth naming:
+Two examples worth naming.
 
-- When every language model fails, it proposed a short retry window so the
-  section could recover quickly. I chose to cache the failure for the rest of
-  the day instead: OpenRouter's free tier allows 50 requests, and a user
-  refreshing during an outage would exhaust that in seventeen loads.
-- I found that votes were saving correctly but the buttons reset on refresh —
-  and that scoping the fix to the current day would break news articles, which
-  stay in the feed for several days.
+**Handling a failed AI insight.** When all three language models are
+unavailable, the assistant proposed a short retry window so the section could
+recover within the hour. I chose to cache the failure for the rest of the day
+instead. OpenRouter's free tier allows fifty requests, and each attempt tries
+three models — so a user refreshing during an outage would exhaust the entire
+daily quota in seventeen page loads. Protecting the quota mattered more than
+recovering quickly.
+
+**Showing votes that had already been cast.** I noticed that votes were saving
+correctly but the buttons reset to blank on every refresh, which reads as a
+bug even though the data was intact. The proposed fix looked up the current
+day's votes — but a news article stays in the feed for several days, so
+yesterday's vote on it would still appear blank. The design changed to the
+most recent vote per item regardless of date, which also means a meme
+downvoted last week stays downvoted when it reappears.
 
 ## Where it was ahead of me
 
