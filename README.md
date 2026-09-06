@@ -13,15 +13,10 @@ recommendation work.
 
 ## Screenshots
 
-The dashboard — sections ordered by the user's own answers, every item
-votable:
-
-<img src="docs/screenshots/dashboard.png" alt="The dashboard" width="480" />
-
-The quiz, revisited as an editable preferences page. Coin choices are capped
-at five, and the content types set the section order:
-
-<img src="docs/screenshots/onboarding.png" alt="The preferences quiz" width="480" />
+| The dashboard | The preferences quiz |
+|---|---|
+| <img src="docs/screenshots/dashboard.png" alt="The dashboard" width="400" /> | <img src="docs/screenshots/onboarding.png" alt="The preferences quiz" width="400" /> |
+| Sections ordered by the user's own answers, every item votable. | The quiz, revisited as an editable preferences page — coins capped at five, content types set the section order. |
 
 ---
 
